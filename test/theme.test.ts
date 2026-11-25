@@ -29,6 +29,6 @@ describe('theme.css', () => {
   });
 
   it('does not import Tailwind itself', () => {
-    expect(css).not.toMatch(/@import\s+['"]tailwindcss['"]/);
+    expect(css).not.toMatch(/^@import\s+['"]tailwindcss['"]/m);
   });
 });

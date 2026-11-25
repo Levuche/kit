@@ -9,7 +9,8 @@
  *   @import 'tailwindcss';
  *   @import '@levuche/kit/theme.css';
  *
- * The theme follows data-lv="light" or data-lv="dark" on <html>. When the
+ * The theme follows data-lv="light" or data-lv="dark" on <html>. The type
+ * is Sora: load it in the app as the CSS variable --font-sora (next/font). When the
  * design tokens change, change them here in the same release.
  */
 
