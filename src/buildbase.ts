@@ -57,3 +57,19 @@ export function buildbaseConfig(input: BuildbaseInput): BuildbaseConfig {
     isAuthConfigured: isOrgId(orgId) && Boolean(clientId && redirectUrl),
   };
 }
+
+/**
+ * The id Buildbase knows an environment by (the SDK's `environmentId`): the
+ * org id for production, `<orgId>-<key>` for another environment. Null
+ * before the org is set. Buildbase keeps referrals and takes public form
+ * posts under this id.
+ */
+export function buildbaseEnvironmentId(config: {
+  orgId: string;
+  environment?: string | undefined;
+}): string | null {
+  const orgId = config.orgId.trim();
+  if (!isOrgId(orgId)) return null;
+  const key = config.environment?.trim();
+  return key && key !== 'production' ? `${orgId}-${key}` : orgId;
+}

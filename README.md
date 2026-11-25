@@ -23,8 +23,69 @@ with their own brand. The design source for both is
   `rounded-card`, `min-h-control` and the rest).
 - **`@levuche/kit`**: `cn()`, `formatPrice()`, `formatPercent()`, `brand`, and
   `buildbaseConfig()` for checked public Buildbase settings. Runs anywhere.
-- **`@levuche/kit/server`**: `readEnv()`, `requireEnv()` and `assertServer()`.
-  Server code only.
+  Also the affiliate-link helpers (`withReferral()`, `forwardReferral()`) and
+  `sendBlockAction()` for block tracking.
+- **`@levuche/kit/server`**: `readEnv()`, `requireEnv()` and `assertServer()`;
+  the shared session cookie (`sessionCookieName()`, `sessionCookieOptions()`);
+  and `forwardForm()`, which sends a form to Buildbase Forms. Server code only.
+
+Kit doesn't depend on the Buildbase SDK. Where a helper needs the SDK, the
+app passes the SDK's function in, as below.
+
+## Shared sign-in, tracking and forms
+
+The website and the app must use these, not copies of their own: a
+different cookie name or domain makes a second cookie, and shared sign-in
+stops working.
+
+```ts
+// Sign-in and sign-out routes: one cookie for every levuche.com site.
+import {
+  expireHostOnlySessionCookie,
+  sessionCookieName,
+  sessionCookieOptions,
+} from '@levuche/kit/server';
+
+const name = sessionCookieName(buildbase.environment);
+response.cookies.set(name, sessionId, sessionCookieOptions(request.nextUrl));
+const old = expireHostOnlySessionCookie(name, request.nextUrl);
+if (old) response.headers.append('Set-Cookie', old);
+```
+
+```tsx
+// A client component near the top of the page: block clicks and sign-ups.
+'use client';
+import { useBlockActions } from '@levuche/ui';
+import { trackGoal, useTracking } from '@buildbase/sdk/tracking';
+import { sendBlockAction } from '@levuche/kit';
+
+export function BlockTracking() {
+  const { track } = useTracking();
+  useBlockActions((action) => sendBlockAction(action, { trackGoal, track }));
+  return null;
+}
+```
+
+```ts
+// app/api/contact/route.ts: a form, checked and sent to Buildbase Forms.
+import { forwardForm } from '@levuche/kit/server';
+
+export const POST = (request: Request) =>
+  forwardForm(request, {
+    ...buildbase,
+    formId: process.env.BUILDBASE_CONTACT_FORM_ID,
+    fields: {
+      name: { max: 200, required: true },
+      email: { max: 320, required: true, email: true },
+      message: { max: 5000, required: true },
+    },
+  });
+```
+
+Affiliate links: keep the referral with the SDK's `captureReferral()` under
+`buildbaseEnvironmentId(buildbase)`, and put the code on links into another
+Levuche site with `withReferral(href, code)`. Buildbase keeps a referral for
+one site only, so the code has to travel in the link.
 
 Shared components (buttons, fields, cards and the rest of the website's
 shadcn/ui set) move here next; see the open issues.

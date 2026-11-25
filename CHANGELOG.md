@@ -6,6 +6,20 @@ tag, such as `github:Levuche/kit#v0.1.0`; how to release is in
 
 ## Unreleased
 
+- Shared sign-in: `@levuche/kit/server` names the session cookie and sets it
+  on levuche.com, so the website and the app share one sign-in
+  (`sessionCookieName()`, `sessionCookieOptions()`, `sharedCookieDomain()`,
+  `expireHostOnlySessionCookie()`).
+- Affiliate links: `withReferral()` and `forwardReferral()` carry an
+  affiliate's code from one Levuche site to another, with
+  `isReferralCode()`, `REFERRAL_PARAM` and `REFERRAL_EVENT`.
+- `buildbaseEnvironmentId()`: the id Buildbase knows an environment by.
+- Block tracking: `sendBlockAction()` sends what @levuche/ui's
+  `useBlockActions()` reports to Buildbase tracking, as goals, with
+  sign-ups also sent as the `lead` event.
+- Forms: `forwardForm()` in `@levuche/kit/server` checks a form post and
+  forwards it to a Buildbase form, and `refuseCrossSitePost()` refuses a
+  post from another site.
 - Release workflow: fills in the title and notes of a release already made on
   GitHub, instead of failing.
 
