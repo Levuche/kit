@@ -70,6 +70,13 @@ jobs:
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
+        # A release made by hand on GitHub for the same tag gets the title and
+        # notes too, instead of failing because it already exists.
         run: |
-          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
-            --title "@levuche/kit $VERSION" --notes-file notes.md --verify-tag
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" \
+              --title "@levuche/kit $VERSION" --notes-file notes.md
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" \
+              --title "@levuche/kit $VERSION" --notes-file notes.md --verify-tag
+          fi
