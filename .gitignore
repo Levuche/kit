@@ -1,0 +1,8 @@
+node_modules/
+coverage/
+*.tgz
+*.tsbuildinfo
+.DS_Store
+# Real keys never go in the repo.
+.env*
+!.env.example
