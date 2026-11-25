@@ -6,6 +6,12 @@ tag, such as `github:Levuche/kit#v0.1.0`; how to release is in
 
 ## Unreleased
 
+## 0.2.0
+
+Shared sign-in, affiliate links, block tracking and forms for the website
+and the app. Nothing from 0.1.0 changes, so moving to it needs no code
+changes.
+
 - Shared sign-in: `@levuche/kit/server` names the session cookie and sets it
   on levuche.com, so the website and the app share one sign-in
   (`sessionCookieName()`, `sessionCookieOptions()`, `sharedCookieDomain()`,
