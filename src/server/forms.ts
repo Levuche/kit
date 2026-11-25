@@ -69,6 +69,13 @@ function answer(body: unknown, status = 200): Response {
   });
 }
 
+/** `url` without slashes at its end, in linear time (no regular expression). */
+function withoutTrailingSlashes(url: string): string {
+  let end = url.length;
+  while (end > 0 && url.charCodeAt(end - 1) === 47) end--;
+  return url.slice(0, end);
+}
+
 function text(value: unknown, max: number): string {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }
@@ -137,7 +144,7 @@ export async function forwardForm(
   const captcha = text(posted.captcha, 4000);
   if (captcha) data._captcha = captcha;
 
-  const server = options.serverUrl.trim().replace(/\/+$/, '');
+  const server = withoutTrailingSlashes(options.serverUrl.trim());
   const url = `${server}/api/forms/public/${org}/${encodeURIComponent(formId)}/submit`;
   const send = options.fetch ?? fetch;
 
