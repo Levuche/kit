@@ -6,6 +6,9 @@ tag, such as `github:Levuche/kit#v0.1.0`; how to release is in
 
 ## Unreleased
 
+- Release workflow: fills in the title and notes of a release already made on
+  GitHub, instead of failing.
+
 ## 0.1.0
 
 The first release.
