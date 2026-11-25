@@ -32,9 +32,14 @@ The version follows [semantic versioning](https://semver.org):
 
 5. The Release workflow checks that the tag matches package.json and sits on
    `main`, runs every check, and publishes the GitHub release with the
-   changelog section as its notes.
+   changelog section as its notes. There's no need to make the release on
+   GitHub yourself; if you do, the workflow fills in its title and notes.
 6. In each app, change the dependency to `github:Levuche/kit#vx.y.z` in its own
    pull request, and test it there.
+
+The repository deletes a pull request's branch when it merges, so a release
+pull request from `dev` removes `dev` unless a ruleset protects it. If `dev`
+is gone after a release, recreate it from `main`.
 
 Never move or delete a tag after it's pushed: apps may already be built from
 it. Fix a bad release with a new patch release.
