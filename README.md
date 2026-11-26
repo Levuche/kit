@@ -15,6 +15,28 @@ with their own brand. The design source for both is
 | @levuche/kit | Levuche's own screens         | `--lv-*`   |
 | @levuche/ui  | Creator sites on levuche.page | `--site-*` |
 
+## Start here
+
+New to this repository, as a developer or an AI agent? Read this README, then
+[CONTRIBUTING.md](CONTRIBUTING.md) for how the team works and
+[docs/RELEASING.md](docs/RELEASING.md) before you release. Open work is in
+[the issues](https://github.com/Levuche/kit/issues). The website's launch
+checklist, [Levuche/website#83](https://github.com/Levuche/website/issues/83),
+says what the sites need next.
+
+Rules for every change:
+
+- Kit holds no keys, tokens, private ids or `.env` files. The helpers read
+  settings at run time from the app that installs them.
+- Kit doesn't depend on the Buildbase SDK; an app passes the SDK's function in.
+- An app only gets a change when it moves to a new tag on purpose, so every
+  change that apps will see goes in CHANGELOG.md under **Unreleased**.
+
+| Who installs it                                       | Tag it's on |
+| ----------------------------------------------------- | ----------- |
+| [Levuche/website](https://github.com/Levuche/website) | `v0.2.0`    |
+| [Levuche/app](https://github.com/Levuche/app)         | `v0.1.0`    |
+
 ## What's in it
 
 - **`@levuche/kit/theme.css`**: design tokens v1.1 for light and dark
@@ -95,7 +117,7 @@ shadcn/ui set) move here next; see the open issues.
 Install a release by its tag, never a branch:
 
 ```sh
-npm install github:Levuche/kit#v0.1.0
+npm install github:Levuche/kit#v0.2.0   # the newest tag; see CHANGELOG.md
 ```
 
 The package ships TypeScript source, so let Next.js compile it:
@@ -124,9 +146,38 @@ What changed in each version is in [CHANGELOG.md](CHANGELOG.md).
 
 ## Work on it
 
-[CONTRIBUTING.md](CONTRIBUTING.md) explains how to report a problem, suggest
-something or ask a question, and how the team works here. Security problems:
-[SECURITY.md](SECURITY.md). Releases: [docs/RELEASING.md](docs/RELEASING.md).
+```sh
+nvm use            # Node 22, from .nvmrc
+npm ci
+npm test           # the unit tests (Vitest)
+npm run check      # ESLint, Prettier, the type check and the tests
+```
+
+| Folder or file  | What's in it                                                        |
+| --------------- | ------------------------------------------------------------------- |
+| `src/index.ts`  | Everything `@levuche/kit` exports, safe to run anywhere             |
+| `src/server/`   | `@levuche/kit/server`: environment, session cookie and form helpers |
+| `src/theme.css` | `@levuche/kit/theme.css`: the design tokens and size presets        |
+| `test/`         | One test file per helper, and checks on the package and the theme   |
+
+How a change gets in:
+
+1. Branch from `dev` with a name like `feature/new-helper`. Types: `feature`,
+   `fix`, `hotfix`, `chore`, `docs`, `ci`.
+2. Add your line under **Unreleased** in CHANGELOG.md if apps will see the
+   change.
+3. Open a pull request into `dev`, fill in the template and write `Closes #N`.
+   The checks **Branch rules**, **Check and test** and
+   **dependency-review** must pass and someone else reviews it before it merges.
+4. To release, follow [docs/RELEASING.md](docs/RELEASING.md): a release pull
+   request into `dev`, then `dev` into `main` with a merge commit, then a
+   version tag on `main`. Pushing the tag needs someone with permission to
+   push tags; the Release workflow then publishes the GitHub release.
+5. Move each app to the new tag in that app's own pull request.
+
+How to report a problem or ask a question is in
+[CONTRIBUTING.md](CONTRIBUTING.md). Security problems:
+[SECURITY.md](SECURITY.md).
 
 ## Licence
 
